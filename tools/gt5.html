@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>格雷5</title>
+    <script>
+      let range = (start, end) => new Array(end - start).fill(start).map((el, i) => start + i);
+      let template = (name, x, z, red, green, blue, suffix) => {
+        return `name:${name},x:${x},z:${z},y:60,enabled:false,red:${red},green:${green},blue:${blue},suffix:${suffix},world:,dimensions:0#\n`;
+      }
+
+      const pad = (num, n) => {
+        var len = num.toString().length;
+        while (len < n) {
+          num = "0" + num;
+          len++;
+        }
+        return num;
+      }
+
+      let calcCoordinateGenerate = (x, z, width, height) => {
+
+        let xSize = Math.round(width / 48);
+        let zSize = Math.round(height / 48);
+
+        let x0, z0, i, j, xt, zt;
+        x = parseInt(x);
+        z = parseInt(z);
+        if (x > 8)
+          x0 = (Math.round((x - 24) / 48)) * 48 + 24;
+        else
+          x0 = (Math.round((x + 8) / 48)) * 48 - 8;
+        if (z > 8)
+          z0 = (Math.round((z - 24) / 48)) * 48 + 24;
+        else
+          z0 = (Math.round((z + 8) / 48)) * 48 - 8;
+
+        let arr = [];
+        for (i of range((-xSize), xSize + 1)) {
+          for (j of range((-zSize), zSize + 1)) {
+            if (x0 == -8 && i == 1) {
+              xt = 24;
+            } else if (x0 == 24 && i == -1) {
+              xt = -8;
+            } else {
+              xt = x0 + i * 48;
+            }
+            if (z0 == -8 && j == 1) {
+              zt = 24;
+            } else if (z0 == 24 && j == -1) {
+              zt = -8;
+            } else {
+              zt = z0 + j * 48;
+            }
+
+            arr.push({xt, zt});
+          }
+
+          // arr = [];
+        }
+        return arr;
+      }
+
+      let arr2Point = (x, y, width, height) => {
+        return new Promise((resolve, reject) => {
+          let arr = calcCoordinateGenerate(x, y, width, height);
+
+          let res = [];
+
+          for (let i = 0; i < arr.length; i++) {
+            res.push(template(`t ${pad(i, 4)}`, arr[i].xt, arr[i].zt, 1, 1, 1, ""))
+          }
+          resolve(res)
+        });
+      }
+
+      let calc = () => {
+
+        const x = document.getElementById('x').value;
+        const y = document.getElementById('y').value;
+        const width = document.getElementById('width').value;
+        const height = document.getElementById('height').value;
+        arr2Point(x, y, width, height).then(msg => {
+          document.getElementById("res").value = msg
+        })
+      }
+
+
+    </script>
+</head>
+<body>
+<input id="x"/>
+<input id="y"/>
+<input id="width"/>
+<input id="height"/>
+<input type="button" onclick="calc()"/>
+<br/>
+<textarea id="res" style="margin-top: 10px;width: 600px;height: 800px;"></textarea>
+</body>
+</html>
