@@ -80,6 +80,10 @@
         const y = document.getElementById('y').value;
         const width = document.getElementById('width').value;
         const height = document.getElementById('height').value;
+        if(!x || !y || !width || !height){
+          alert("参数不全");
+          return;
+        }
         arr2Point(x, y, width, height).then(msg => {
           document.getElementById("res").value = msg
         })
@@ -89,11 +93,11 @@
     </script>
 </head>
 <body>
-<input id="x"/>
-<input id="y"/>
-<input id="width"/>
-<input id="height"/>
-<input type="button" onclick="calc()"/>
+玩家x坐标<input id="x"/>
+玩家y坐标<input id="y"/>
+生成的宽度<input id="width"/>
+生成的长度<input id="height"/>
+<input type="button" onclick="calc()"  value="生成"/>
 <br/>
 <textarea id="res" style="margin-top: 10px;width: 600px;height: 800px;"></textarea>
 </body>
